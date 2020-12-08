@@ -2,13 +2,13 @@
 //requerimos el archivo worldDB que contiene la logica y consultas a la base de datos
 require_once "alumnosDB.php";
 
-class WorldAPI {
+class AlumnosAPI {
     
-    protected $worldDB; //Atributo de clase
+    protected $alumnoDB; //Atributo de clase
     
     //Creando el método constructor de la clase
     public function __construct() { 
-        $this->worldDB = new AlumnosdDB();          
+        $this->alumnoDB = new AlumnosdDB();          
     }
 
     /*Método publico que ejecuta la llamada a una operacion
@@ -29,19 +29,19 @@ class WorldAPI {
         //Evaluamos el méetodo http utilizado para la llamada a la API
         switch ($method) {
         case 'GET'://Si es GET hace una consulta
-            $this->worldDB->Consultas();
+            $this->alumnoDB->Consultas();
             break;     
         case 'POST'://Si es POST inserta
-            $this->worldDB ->SaveCity();
+            $this->alumnoB ->SaveCity();
             break;                
         case 'PUT'://Si es PUT actualiza
-            $this->worldDB ->UpdateCity();
+            $this->alumnoDB ->UpdateCity();
             break;      
         case 'DELETE'://Obviamente DELETE elimina
-            $this->worldDB ->DeleteCity();
+            $this->alumnoDB ->DeleteCity();
             break;
         default://metodo NO soportado
-            $this->worldDB ->response(405);
+            $this->alumnoDB ->response(405);
             break;
         }
     }

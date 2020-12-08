@@ -22,11 +22,11 @@
     
     /*require_once establece que el código del archivo invocado es requerido, es decir, 
     obligatorio para el funcionamiento del programa.*/    
-    require_once "worldAPI.php";  
+    require_once "alumnosAPI.php";  
 
     //Creando objeto a partir de la clase WorldAPI
-    $worldAPI = new WorldAPI();
+    $alumnosAPI = new AlumnosAPI();
 
     //Utilizando la instancia creada para poder acceder al método API()
-    $worldAPI->API();
+    $alumnosAPI->API();
 ?>
