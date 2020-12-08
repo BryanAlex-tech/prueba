@@ -3,7 +3,7 @@
 obligatorio para el funcionamiento del programa.*/
 require_once "db/conexion.php";
 
-class AlumnosdDB
+class AlumnosDB
 {
     protected $dbConn;
     protected $mysqliconn;
@@ -24,18 +24,18 @@ class AlumnosdDB
     }
     
     #region Consultas
-    public function GetCity($id = 0)
+    public function GetAlumno($id = 0)
     {
-        $stmt = $this->mysqliconn->prepare("SELECT Name, CountryCode, District, Population FROM city WHERE ID=? ; ");
+        $stmt = $this->mysqliconn->prepare("SELECT nombre, apellidos, carnet FROM alumnos WHERE idAlumno=? ; ");
         $stmt->bind_param('s', $id);
         $stmt->execute();
-        $stmt->bind_result($col1, $col2, $col3, $col4);
-        $city = array();
+        $stmt->bind_result($col1, $col2, $col3);
+        $alumno = array();
         while ($stmt->fetch()) {
-            $city[] = ['ID' => $id, 'Name' => $col1, 'CountryCode' => $col2, 'District' => $col3, 'Population' => $col4];
+            $alumno[] = ['ID' => $id, 'nombre' => $col1, 'apellidos' => $col2, 'carnet' => $col3];
         }        
         $stmt->close();
-        return $city;
+        return $alumno;
     }
 
     public function GetAlumnos()
@@ -49,9 +49,9 @@ class AlumnosdDB
     function Consultas()
     {
         if ($_REQUEST['action'] == 'alumnos') {
-            $db = new AlumnosdDB();
+            $db = new AlumnosDB();
             if (isset($_REQUEST['id'])) { //muestra 1 solo registro si es que existiera ID                 
-                $response = $db->GetCity($_REQUEST['id']);
+                $response = $db->GetAlumno($_REQUEST['id']);
                 echo json_encode($response, JSON_PRETTY_PRINT);
             } else { //muestra todos los registros                 
                 $response = $db->GetAlumnos();
@@ -65,28 +65,28 @@ class AlumnosdDB
     #endregion
     
     #region Inserts
-    public function Insert($name = '', $cc = '', $district = '', $population = '')
+    public function Insert($nombre = '', $apellidos = '', $carnet = '')
     {
-        $stmt = $this->mysqliconn->prepare("INSERT INTO city(Name,CountryCode,District,Population) VALUES(?,?,?,?);");
-        $stmt->bind_param('sssi', $name, $cc, $district, $population);
+        $stmt = $this->mysqliconn->prepare("INSERT INTO alumnos(nombre,apellidos,carnet) VALUES(?,?,?);");
+        $stmt->bind_param('sss', $nombre, $apellidos, $carnet);
         $r = $stmt->execute();
         $stmt->close();
         return $r;
     }
 
-    function SaveCity()
+    function SaveAlumno()
     {
-        if ($_REQUEST['action'] == 'ciudades') {
+        if ($_REQUEST['action'] == 'alumnos') {
             //Decodifica un string de JSON
             $obj = json_decode(file_get_contents('php://input'));
             $objArr = (array)$obj;
 
             if (empty($objArr)) {
                 $this->response(422, "error", "Nada que anadir. Comprobar json");
-            } else if (isset($obj->name)) {
-                $city = new WorldDB();
-                $city->Insert($obj->name, $obj->countryCode, $obj->district, $obj->population);
-                $this->response(200, "success", "Nueva ciudad agregada");
+            } else if (isset($obj->nombre)) {
+                $guardar = new AlumnosDB();
+                $guardar->Insert($obj->nombre, $obj->apellidos, $obj->carnet);
+                $this->response(200, "success", "Nuevo alumno agregado");
             } else {
                 $this->response(422, "error", "La propiedad no está definida");
             }

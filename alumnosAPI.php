@@ -8,7 +8,7 @@ class AlumnosAPI {
     
     //Creando el método constructor de la clase
     public function __construct() { 
-        $this->alumnoDB = new AlumnosdDB();          
+        $this->alumnoDB = new AlumnosDB();          
     }
 
     /*Método publico que ejecuta la llamada a una operacion
@@ -32,16 +32,16 @@ class AlumnosAPI {
             $this->alumnoDB->Consultas();
             break;     
         case 'POST'://Si es POST inserta
-            $this->alumnoB ->SaveCity();
+            $this->alumnoDB->SaveAlumno();
             break;                
         case 'PUT'://Si es PUT actualiza
-            $this->alumnoDB ->UpdateCity();
+            $this->alumnoDB->UpdateCity();
             break;      
         case 'DELETE'://Obviamente DELETE elimina
-            $this->alumnoDB ->DeleteCity();
+            $this->alumnoDB->DeleteCity();
             break;
         default://metodo NO soportado
-            $this->alumnoDB ->response(405);
+            $this->alumnoDB->response(405);
             break;
         }
     }
