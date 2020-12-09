@@ -35,10 +35,10 @@ class AlumnosAPI {
             $this->alumnoDB->SaveAlumno();
             break;                
         case 'PUT'://Si es PUT actualiza
-            $this->alumnoDB->UpdateCity();
+            $this->alumnoDB->UpdateAlumno();
             break;      
         case 'DELETE'://Obviamente DELETE elimina
-            $this->alumnoDB->DeleteCity();
+            $this->alumnoDB->DeleteAlumno();
             break;
         default://metodo NO soportado
             $this->alumnoDB->response(405);

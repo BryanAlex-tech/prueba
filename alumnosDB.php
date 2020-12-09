@@ -101,20 +101,20 @@ class AlumnosDB
 
     public function Delete($id = 0)
     {
-        $stmt = $this->mysqliconn->prepare("DELETE FROM city WHERE ID=? ;");
+        $stmt = $this->mysqliconn->prepare("DELETE FROM alumnos WHERE idAlumno=? ;");
         $stmt->bind_param('i', $id);
         $r = $stmt->execute();
         $stmt->close();
         return $r;
     }
 
-    function DeleteCity()
+    function DeleteAlumno()
     {
         if (isset($_REQUEST['action']) && isset($_REQUEST['id'])) {
-            if ($_REQUEST['action'] == 'ciudades') {
-                $db = new WorldDB();
+            if ($_REQUEST['action'] == 'alumnos') {
+                $db = new AlumnosDB();
                 $db->Delete($_REQUEST['id']);
-                $this->response(204);
+                $this->response(204, "success", "Alumno borrado");
                 exit;
             }
         }
@@ -125,11 +125,11 @@ class AlumnosDB
 
     #region Updates
 
-    public function Update($id, $newName, $newCC, $newDistrict, $newPopulation)
+    public function Update($id, $nombre, $apellidos, $carnet)
     {
         if ($this->CheckID($id)) {
-            $stmt = $this->mysqliconn->prepare("UPDATE city SET Name=?, CountryCode=?, District=?, Population=? WHERE ID=? ;");
-            $stmt->bind_param('sssii', $newName, $newCC, $newDistrict, $newPopulation, $id);
+            $stmt = $this->mysqliconn->prepare("UPDATE alumnos SET nombre=?, apellidos=?, carnet=? WHERE idAlumno=? ;");
+            $stmt->bind_param('sssi', $nombre, $apellidos, $carnet, $id);
             $r = $stmt->execute();
             $stmt->close();
             return $r;
@@ -137,18 +137,18 @@ class AlumnosDB
         return false;
     }
 
-    function UpdateCity()
+    function UpdateAlumno()
     {
         if (isset($_REQUEST['action']) && isset($_REQUEST['id'])) {
-            if ($_REQUEST['action'] == 'ciudades') {
+            if ($_REQUEST['action'] == 'alumnos') {
                 $obj = json_decode(file_get_contents('php://input'));
                 $objArr = (array)$obj;
                 if (empty($objArr)) {
                     $this->response(422, "error", "Nada que actualizar. Comprobar json");
-                } else if (isset($obj->name)) {
-                    $db = new WorldDB();
-                    $db->Update($_REQUEST['id'], $obj->name, $obj->countryCode, $obj->district, $obj->population);
-                    $this->response(200, "success", "Ciudad actualizada");
+                } else if (isset($obj->nombre)) {
+                    $db = new AlumnosDB();
+                    $db->Update($_REQUEST['id'], $obj->nombre, $obj->apellidos, $obj->carnet);
+                    $this->response(200, "success", "Datos actualizados");
                 } else {
                     $this->response(422, "error", "La propiedad no esta definida");
                 }
@@ -160,7 +160,7 @@ class AlumnosDB
 
     public function CheckID($id)
     {
-        $stmt = $this->mysqliconn->prepare("SELECT * FROM city WHERE ID=?");
+        $stmt = $this->mysqliconn->prepare("SELECT * FROM alumnos WHERE idAlumno=?");
         $stmt->bind_param("s", $id);
         if ($stmt->execute()) {
             $stmt->store_result();
