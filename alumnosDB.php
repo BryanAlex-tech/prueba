@@ -1,6 +1,5 @@
 <?php
-/*require_once establece que el código del archivo invocado es requerido, es decir, 
-obligatorio para el funcionamiento del programa.*/
+
 require_once "db/conexion.php";
 
 class AlumnosDB
@@ -8,22 +7,16 @@ class AlumnosDB
     protected $dbConn;
     protected $mysqliconn;
 
-    /**
-     * Constructor de clase
-     */
     public function __construct()
     {
         try {
-            //conexión a base de datos
             $this->mysqliconn = BaseDatos::conectar();
         } catch (mysqli_sql_exception $e) {
-            //Si no se puede realizar la conexión
             http_response_code(500);
             exit;
         }
     }
     
-    #region Consultas
     public function GetAlumno($id = 0)
     {
         $stmt = $this->mysqliconn->prepare("SELECT nombre, apellidos, carnet FROM alumnos WHERE idAlumno=? ; ");
@@ -50,10 +43,10 @@ class AlumnosDB
     {
         if ($_REQUEST['action'] == 'alumnos') {
             $db = new AlumnosDB();
-            if (isset($_REQUEST['id'])) { //muestra 1 solo registro si es que existiera ID                 
+            if (isset($_REQUEST['id'])) {                 
                 $response = $db->GetAlumno($_REQUEST['id']);
                 echo json_encode($response, JSON_PRETTY_PRINT);
-            } else { //muestra todos los registros                 
+            } else {          
                 $response = $db->GetAlumnos();
                 echo json_encode($response, JSON_PRETTY_PRINT);
             }
@@ -62,9 +55,8 @@ class AlumnosDB
             $this->response(400);
         }
     }
-    #endregion
     
-    #region Inserts
+    
     public function Insert($nombre = '', $apellidos = '', $carnet = '')
     {
         $stmt = $this->mysqliconn->prepare("INSERT INTO alumnos(nombre,apellidos,carnet) VALUES(?,?,?);");
@@ -77,7 +69,6 @@ class AlumnosDB
     function SaveAlumno()
     {
         if ($_REQUEST['action'] == 'alumnos') {
-            //Decodifica un string de JSON
             $obj = json_decode(file_get_contents('php://input'));
             $objArr = (array)$obj;
 
@@ -94,10 +85,6 @@ class AlumnosDB
             $this->response(400);
         }
     }
-
-    #endregion
-
-    #region Delete
 
     public function Delete($id = 0)
     {
@@ -120,10 +107,6 @@ class AlumnosDB
         }
         $this->response(400);
     }
-
-    #endregion
-
-    #region Updates
 
     public function Update($id, $nombre, $apellidos, $carnet)
     {
@@ -171,9 +154,6 @@ class AlumnosDB
         return false;
     }
 
-    #endregion
-
-    //Método para generar los codigos de respuesta
     function response($code = 200, $status = "", $message = "")
     {
         http_response_code($code);
