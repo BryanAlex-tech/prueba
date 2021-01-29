@@ -15,7 +15,7 @@ class AlumnosAPI {
         header('Content-Type: application/json');  
 
         $method = $_SERVER['REQUEST_METHOD'];
-
+        //usamos switch para elegir metodo
         switch ($method) {
         case 'GET'://Si es GET hace una consulta
             $this->alumnoDB->Consultas();
