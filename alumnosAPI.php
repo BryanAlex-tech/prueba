@@ -9,7 +9,7 @@ class AlumnosAPI {
     public function __construct() { 
         $this->alumnoDB = new AlumnosDB();          
     }
-
+    //Configurando métodos de la api
     public function API(){
 
         header('Content-Type: application/json');  
